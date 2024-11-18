@@ -28,12 +28,12 @@ public class UserService {
         billingAddress.setAddress(dto.address());
         billingAddress.setNumber(dto.number());
         billingAddress.setComplement(dto.complement());
-
-        var savedBillingAddress = billingAddressRepository.save(billingAddress);
+      //  We are using cascade All, so we don't need to do it, cascade will do it
+     //   var savedBillingAddress = billingAddressRepository.save(billingAddress);
 
         var user = new UserEntity();
         user.setFullName(dto.fullName());
-        user.setBillingAddress(savedBillingAddress);
+        user.setBillingAddress(billingAddress);
 
         return userRepository.save(user);
 
@@ -42,5 +42,16 @@ public class UserService {
     public Optional<UserEntity> findById(UUID userId) {
 
         return userRepository.findById(userId);
+    }
+
+    public Boolean deleteById(UUID userId) {
+        var user = userRepository.findById(userId);
+        if(user.isPresent()){
+            userRepository.deleteById(userId);
+           // Cascade all we dont need to delete the BillingAddess, cascade will do it.
+            // billingAddressRepository.deleteById(user.get().getBillingAddress().getBillingAddressId());
+        }
+        return user.isPresent();
+
     }
 }
