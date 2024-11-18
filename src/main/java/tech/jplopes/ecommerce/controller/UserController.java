@@ -1,14 +1,13 @@
 package tech.jplopes.ecommerce.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.jplopes.ecommerce.controller.dto.CreateUserDto;
+import tech.jplopes.ecommerce.entities.UserEntity;
 import tech.jplopes.ecommerce.services.UserService;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -26,6 +25,15 @@ public class UserController {
         var user = userService.createUser(dto);
 
         return ResponseEntity.created(URI.create("/users/"+ user.getUserId())).build();
+    }
+
+    @GetMapping(path = "/{userId}")
+    public ResponseEntity<UserEntity> findById(@PathVariable UUID userId){
+        var user = userService.findById(userId);
+
+        return user.isPresent() ?
+                ResponseEntity.ok(user.get()) :
+                ResponseEntity.notFound().build();
     }
 
 }

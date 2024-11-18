@@ -7,6 +7,9 @@ import tech.jplopes.ecommerce.entities.UserEntity;
 import tech.jplopes.ecommerce.repository.BillingAddressRepository;
 import tech.jplopes.ecommerce.repository.UserRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -34,5 +37,10 @@ public class UserService {
 
         return userRepository.save(user);
 
+    }
+
+    public Optional<UserEntity> findById(UUID userId) {
+
+        return userRepository.findById(userId);
     }
 }
